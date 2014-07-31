@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subreport_ceratometria" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cc6ed8c8-d032-4393-a718-d4807e234a49">
+	<property name="ireport.zoom" value="2.1435888100000025"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CodigoCliente" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM ceratometria where cliente_CodCliente=$P{CodigoCliente} ORDER BY DATA DESC LIMIT 1;;]]>
+	</queryString>
+	<field name="idCeratometria" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ODhorizontal" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="OEhorizontal" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ODvertical" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="OEvertical" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ODeixo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="OEeixo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_CodCliente" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="75" splitType="Stretch">
+			<printWhenExpression><![CDATA[$F{idCeratometria} > 0]]></printWhenExpression>
+			<rectangle>
+				<reportElement x="1" y="0" width="568" height="73" uuid="6f1b2592-bc81-4c09-beb6-f5594e9a2dbe"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="102" y="20" width="38" height="11" uuid="f51bebbe-2ba4-4dce-8cde-f6b7668350c5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vertical]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="164" y="20" width="38" height="11" uuid="f39d5285-33f6-4454-94e8-b991e4700b97"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Eixo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="32" width="19" height="13" uuid="9804f609-3b51-4d9e-b3d9-74142414b232"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="20" width="42" height="11" uuid="b25a98c7-d229-4e80-bea8-8732bb74b614"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Horizontal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="45" width="19" height="14" uuid="9bd7ce74-f0e5-4950-a713-4e648c92754d"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OE]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="46" y="34" width="30" height="13" uuid="b6d0f388-960c-466b-bb2f-e03a4fd5215c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ODhorizontal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="46" y="45" width="30" height="13" uuid="b6bd68af-9f22-41de-a947-7af6d155ea2f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OEhorizontal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="110" y="34" width="25" height="13" uuid="20c5e60b-9781-4a5e-b8c4-e9ee9182a38f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ODvertical}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="110" y="47" width="25" height="13" uuid="4ffc31d4-cc3e-4c56-b306-41134bccf2d6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OEvertical}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="176" y="34" width="13" height="13" uuid="31bf5cbc-0fa6-4e1a-8bff-df59d8e93f7e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ODeixo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="176" y="47" width="13" height="13" uuid="ad6c12ce-ffd7-45f2-a102-9f7efad12db2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OEeixo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="490" y="52" width="58" height="13" uuid="7d56f8e1-04a1-44fa-9f3a-1d2a99d11d3e"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="19" y="30" width="200" height="1" uuid="4aa1769e-0a3d-4712-b320-a1c4aa6bfaac"/>
+				<graphicElement>
+					<pen lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="37" y="20" width="1" height="40" uuid="e85ed8c2-0dc8-471b-968d-f3c5f109c167"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="3" width="100" height="13" uuid="0c53abf6-8771-416d-b855-18dee27116b4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CERATOMETRIA]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

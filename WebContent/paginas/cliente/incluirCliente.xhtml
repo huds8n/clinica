@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/facelets/template.xhtml">
+	<ui:define name="title">
+		<title>SisOtica</title>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<script type='text/javascript'>
+			$(document)
+					.ready(
+
+							function() {
+								jQuery('body')
+										.on(
+												'keydown',
+												'input, select, textarea',
+												function(e) {
+
+													var self = $(this), form = self
+															.parents('form:eq(0)'), focusable, next;
+													if (e.keyCode == 13) {
+														focusable = form
+																.find(
+																		'input,a,select,button,textarea')
+																.filter(
+																		':visible');
+														next = focusable
+																.eq(focusable
+																		.index(this) + 1);
+														if (next.length) {
+															next.focus();
+														} else {
+															form.submit();
+														}
+														return false;
+													}
+												});
+							});
+		</script>
+
+		<f:view>
+			<h:form id="form1">
+
+				<p:panel id="panel" header="Inclusão de Cliente">
+					<h:panelGrid columns="6">
+						<p:outputLabel id="NomeLabel" value="Nome: " for="NomeCampo" />
+						<h:panelGroup>
+							<p:inputText id="NomeCampo" value="#{clienteBean.registro.nome}"
+								style="text-transform:uppercase;" size="35" maxlength="50"
+								required="true" requiredMessage="O Nome é obrigatório." />
+						</h:panelGroup>
+
+						<p:outputLabel id="SiglaLabel" value="Data Nasc:" for="SiglaCampo" />
+						<h:panelGroup>
+							<p:inputMask id="SiglaCampo" mask="99/99/9999"
+								value="#{clienteBean.registro.dataNascimento}" size="10"
+								maxlength="10" required="true"
+								requiredMessage="A Data é obrigatória.">
+
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:inputMask>
+						</h:panelGroup>
+
+						<p:outputLabel id="telLabel" value="Telefone:" for="telCampo" />
+						<h:panelGroup>
+							<p:inputMask id="telCampo" mask="(99)9999-9999"
+								value="#{clienteBean.registro.telefone}" size="15"
+								maxlength="15" required="true"
+								requiredMessage="O Telefone é obrigatório." />
+						</h:panelGroup>
+
+						<p:outputLabel id="celLabel" value="Celular:" for="celCampo" />
+						<h:panelGroup>
+							<p:inputMask id="celCampo" mask="(99)9999-9999"
+								value="#{clienteBean.registro.celular}" size="15" maxlength="15" />
+						</h:panelGroup>
+
+						<p:outputLabel id="endLabel" value="Endereco:" for="endCampo" />
+						<h:panelGroup>
+							<p:inputText id="endCampo" style="text-transform:uppercase;"
+								value="#{clienteBean.registro.endereco}" size="30"
+								maxlength="50" />
+						</h:panelGroup>
+
+						<p:outputLabel id="cidadeLabel" value="Cidade:" for="cidadeCampo" />
+						<h:panelGroup>
+							<p:inputText id="cidadeCampo" style="text-transform:uppercase;"
+								value="#{clienteBean.registro.cidade}" size="15" maxlength="50" />
+						</h:panelGroup>
+
+
+						<p:outputLabel value="UF:" for="acForce" />
+						<p:inputText id="acForce" size="4" maxlength="2"
+							value="#{clienteBean.registro.uf}" />
+
+
+
+						<p:outputLabel id="profLabel" value="Profissão:" for="profCampo" />
+						<h:panelGroup>
+							<p:inputText id="profCampo" style="text-transform:uppercase;"
+								value="#{clienteBean.registro.ocupacao}" size="30"
+								maxlength="50" />
+						</h:panelGroup>
+
+
+						<p:outputLabel id="obsLabel" value="Email:" for="obsCampo" />
+						<h:panelGroup>
+							<p:inputText id="obsCampo" value="#{clienteBean.registro.obs}"
+								style="text-transform:uppercase;" size="40" maxlength="50"
+								onkeypress="if(event.keyCode==13){document.getElementById('form1:txtCampo').focus();return false;}" />
+						</h:panelGroup>
+
+						<p:outputLabel id="txtLabel" value="Memo:" for="txtCampo" />
+						<h:panelGroup>
+							<p:inputTextarea id="txtCampo" style="text-transform:uppercase;"
+								cols="40" value="#{clienteBean.registro.txtMem}"
+								autoResize="false" />
+						</h:panelGroup>
+
+
+
+
+					</h:panelGrid>
+
+
+				</p:panel>
+
+				<h:panelGrid columns="4">
+					<p:commandButton id="incluir" value="Incluir"
+						action="#{clienteBean.incluir}" type="submit" icon="ui-icon-disk"
+						ajax="false" />
+					<p:commandButton id="limpar" value="Limpar" type="reset"
+						icon="ui-icon-trash" />
+					<p:growl id="growl" showDetail="true" />
+					<h:outputLink
+						value="#{facesContext.externalContext.request.contextPath}/paginas/index.xhtml">
+						<img
+							src="#{facesContext.externalContext.request.contextPath}/resources/voltar.png"
+							width="45px" />
+					</h:outputLink>
+				</h:panelGrid>
+			</h:form>
+
+		</f:view>
+	</ui:define>
+</ui:composition>
+
+</html>

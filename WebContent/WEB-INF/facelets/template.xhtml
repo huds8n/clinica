@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+
+
+	<link rel="shortcut icon"
+		href="#{facesContext.externalContext.request.contextPath}/resources/favicon.ico" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<h:outputStylesheet library="css" name="estilos.css" />
+	<h:outputScript library="js" name="jquery.maskMoney.js" />
+
+	<ui:insert name="title">
+		<title>Facelets Template</title>
+	</ui:insert>
+</h:head>
+<body>
+
+	<div id="tudo" style="background-color: white">
+
+		<div id="conteudo">
+			<f:view contentType="text/html; charset=ISO-8859-1"
+				encoding="ISO-8859-1">
+				<h:form>
+					<!--  Alterar para divs... -->
+					<table width="100%" bgcolor="white">
+						<tr>
+							<td align="left"><h:graphicImage height="85%" width="100%"
+									value="#{resource['header2.png']}" /></td>
+
+						</tr>
+					</table>
+				</h:form>
+
+				<br />
+
+				<div id="topo" style="background-color: white">
+
+					<ui:insert name="top">
+						<h:form>
+
+							<p:menubar autoDisplay="true">
+
+								<p:submenu label="Agenda">
+									<p:menuitem value="Incluir" ajax="false"
+										action="/paginas/agenda/incluirAgenda.xhtml?faces-redirect=true">
+									</p:menuitem>
+									<p:menuitem value="Listar" ajax="false"
+										action="/paginas/agenda/listarAgenda.xhtml?faces-redirect=true">
+									</p:menuitem>
+									<p:menuitem value="Consultar" ajax="false"
+										action="/paginas/agenda/consultarAgenda.xhtml?faces-redirect=true">
+									</p:menuitem>
+
+								</p:submenu>
+
+
+								<p:submenu label="Clientes">
+									<p:menuitem value="Incluir" ajax="false"
+										action="/paginas/cliente/incluirCliente.xhtml?faces-redirect=true"
+										icon="ui-icon-person">
+									</p:menuitem>
+
+									<p:menuitem value="Pesquisar" ajax="false"
+										icon="ui-icon-search"
+										action="/paginas/cliente/pesquisarCliente.xhtml?faces-redirect=true">
+									</p:menuitem>
+								</p:submenu>
+
+								<p:submenu label="Consulta">
+									<p:menuitem value="Iniciar" ajax="false"
+										action="/paginas/consulta/iniciarConsulta.xhtml?faces-redirect=true">
+									</p:menuitem>
+								</p:submenu>
+
+
+								<p:submenu label="Medicos">
+									<p:menuitem value="Incluir" ajax="true"
+										action="/paginas/medico/incluirMedico.xhtml?faces-redirect=true">
+									</p:menuitem>
+
+
+									<p:menuitem value="Pesquisar" ajax="false"
+										action="/paginas/medico/pesquisarMedico.xhtml?faces-redirect=true">
+									</p:menuitem>
+								</p:submenu>
+								<p:submenu label="Relatorios">
+									<p:menuitem value="Historico Cliente" ajax="false"
+										action="/paginas/relatorio/relatorio.xhtml?faces-redirect=true">
+									</p:menuitem>
+								</p:submenu>
+								<p:menuitem value="Chat"
+									url="http://localhost:8080/Chat/faces/paginas/index.xhtml"
+									target="_blank" icon="ui-icon-note" />
+								<p:submenu label="Opções">
+									<p:menuitem value="Sair" ajax="false"
+										action="#{userBean.logout}">
+									</p:menuitem>
+								</p:submenu>
+							</p:menubar>
+						</h:form>
+					</ui:insert>
+				</div>
+
+				<div id="principal">
+					<ui:insert name="content">Content From Template</ui:insert>
+				</div>
+
+
+
+				<!-- Usado para deixar o menu sempre abaixo -->
+				<div class="clear"></div>
+			</f:view>
+		</div>
+		<!-- Fim da div conteudo -->
+
+		<div id="rodape">
+			<p>SisOtica-Web - Hudson Alves - (61)8563-8129 /
+				huds8n@hotmail.com</p>
+		</div>
+
+	</div>
+	<!-- Fim da div tudo -->
+
+	<script>
+		function configurarMoeda() {
+			$(".moeda").maskMoney({
+				decimal : ".",
+				thousands : ".",
+				allowZero : true
+			});
+		}
+
+		$(document).ready(function() {
+			configurarMoeda();
+		});
+	</script>
+
+</body>
+</html>

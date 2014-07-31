@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+<link rel="shortcut icon" href="#{facesContext.externalContext.request.contextPath}/resources/favicon.ico" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<h:outputStylesheet library="css" name="estilos.css" />
+
+	<ui:insert name="title">
+		<title>Facelets Template</title>
+	</ui:insert>
+</h:head>
+<body>
+
+	<div id="tudo" style="background-color: white">
+
+		<div id="conteudo">
+			<h:form>
+				<!--  Alterar para divs... -->
+				<table width="100%" bgcolor="white">
+					<tr>
+					
+
+					</tr>
+				</table>
+			</h:form>
+
+			<br />
+
+			<div id="topo" style="background-color: white">
+
+				<ui:insert name="top">
+				</ui:insert>
+			</div>
+
+			<div id="principal">
+				<ui:insert name="content">Content From Template</ui:insert>
+			</div>
+
+
+
+			<!-- Usado para deixar o menu sempre abaixo -->
+			<div class="clear"></div>
+
+		</div>
+		<!-- Fim da div conteudo -->
+
+		<div id="rodape">
+			<p>SisOtica-Web - Hudson Alves - (61)8563-8129 / huds8n@hotmail.com</p>
+		</div>
+
+	</div>
+	<!-- Fim da div tudo -->
+
+</body>
+</html>

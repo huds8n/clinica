@@ -1,0 +1,632 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/facelets/template.xhtml">
+	<ui:define name="title">
+		<title>SisOtica</title>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<f:view>
+
+			<center>
+				<p:outputLabel value="#{clienteBean.clienteRelatorio.nome}"
+					id="nomeCliente" style="font-family: sans-serif !important;" />
+			</center>
+
+
+			<p:outputPanel id="atualizarTudo">
+				<p:growl id="msg" autoUpdate="true" showDetail="true" />
+				<p:ajaxStatus onstart="dialogAguarde.show()"
+					oncomplete="dialogAguarde.hide();" />
+				<p:dialog widgetVar="dialogAguarde" resizable="false"
+					closable="false" modal="true" header="Aguarde...">
+					<img
+						src="#{facesContext.externalContext.request.contextPath}/resources/ajaxLoading.gif"
+						width="20px" />
+				</p:dialog>
+				<p:tabView id="tabView">
+					<h:outputLabel id="funcCampo"
+						value="#{clienteBean.clienteRelatorio.nome}" />
+					<p:tab id="tab0">
+
+						<f:facet name="title">
+							<p:graphicImage value="#{resource['icone4.png']}" />
+							<h:outputText value="Cliente" />
+						</f:facet>
+						<h:form>
+							<h:panelGrid columns="4">
+								<p:outputLabel id="filtroLabel" value="Nome:" for="filtroCampo" />
+								<h:panelGroup>
+									<p:inputText id="filtroCampo" value="#{clienteBean.filtro}"
+										size="30" maxlength="30" required="true"
+										requiredMessage="O nome é obrigatorio" />
+
+								</h:panelGroup>
+
+								<p:commandButton id="listar" value="Pesquisar"
+									icon="ui-icon-search" ajax="true" update=":atualizarTudo"
+									actionListener="#{clienteBean.listarLike}" type="submit" />
+							</h:panelGrid>
+							<p />
+							<p />
+
+
+
+							<p:dataTable var="cliente" value="#{clienteBean.listagem}"
+								id="teste" border="1" width="100%"
+								rowKey="#{cliente.codCliente}"
+								selection="#{clienteBean.clienteRelatorio}"
+								selectionMode="single" paginator="true"
+								paginatorPosition="bottom" rows="8"
+								emptyMessage="Sem Registros Para Exibição!!!"
+								rendered="#{clienteBean.listagem != null}">
+								<p:ajax event="rowSelect" update=":tabView :nomeCliente"
+									listener="#{clienteBean.buscarHistorico}" />
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Nome" />
+									</f:facet>
+									<h:outputText value="#{cliente.nome}" />
+								</p:column>
+
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Dt Nasc." />
+									</f:facet>
+									<h:outputText value="#{cliente.dataNascimento}">
+										<f:convertDateTime pattern="dd/MM/yy" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Celular" />
+									</f:facet>
+									<h:outputText value="#{cliente.celular} " />
+								</p:column>
+
+							</p:dataTable>
+						</h:form>
+					</p:tab>
+					<p:tab id="tab1"
+						disabled="#{clienteBean.clienteRelatorio.nome == null}">
+
+						<f:facet name="title">
+							<p:graphicImage value="#{resource['icone2.png']}" />
+							<h:outputText value="Refração" />
+						</f:facet>
+
+
+
+						<h:form>
+
+
+							<p:dataTable id="dataTable" var="refra"
+								value="#{clienteBean.listaRefracao}" border="1" width="100%"
+								rowKey="#{refra.idRefracao}" selection="#{clienteBean.refracao}"
+								paginator="true" liveScroll="true" rows="1"
+								paginatorPosition="bottom"
+								emptyMessage="Sem Registros Para Exibição!!!">
+								<p:column>
+									<p:panelGrid>
+										<f:facet name="header">
+											<p:row>
+												<p:column colspan="16">Refração <h:outputText
+														value="#{refra.dta}" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2">
+												</p:column>
+												<p:column colspan="2">Esféricos</p:column>
+												<p:column colspan="2">Cilindro</p:column>
+												<p:column colspan="2">Eixo</p:column>
+												<p:column colspan="2">AV</p:column>
+												<p:column colspan="2">AO</p:column>
+												<p:column colspan="2">ADIÇÃO</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2">OD
+									</p:column>
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText value="#{refra.snlOdEsferico}">
+
+														</h:outputText>
+														<h:outputText value="#{refra.odEsferico}" />
+													</h:panelGroup>
+												</p:column>
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText value="#{refra.snlOdCilindro}">
+
+														</h:outputText>
+														<h:outputText value="#{refra.odCilindro}" />
+													</h:panelGroup>
+												</p:column>
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText value="#{refra.odEixo}" />
+													</h:panelGroup>
+												</p:column>
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText id="selectRefraAv" value="#{refra.odAv}" />
+
+
+													</h:panelGroup>
+												</p:column>
+
+
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText id="selectRefraAo" value="#{refra.ao}">
+
+														</h:outputText>
+													</h:panelGroup>
+												</p:column>
+
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText value="#{refra.adcao}" />
+													</h:panelGroup>
+												</p:column>
+											</p:row>
+
+										</f:facet>
+
+										<p:row>
+											<p:column colspan="2" style="text-align:center;">OE 
+									</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<h:outputText value="#{refra.snlOeEsferico}">
+
+													</h:outputText>
+													<h:outputText value="#{refra.oeEsferico}" />
+												</h:panelGroup>
+											</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<h:outputText value="#{refra.snlOeCilindro}" />
+													<h:outputText value="#{refra.oeCilindro}" />
+												</h:panelGroup>
+											</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<h:outputText value="#{refra.oeEixo}" />
+												</h:panelGroup>
+											</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<h:outputText id="selectRefraoeAV" value="#{refra.oeAv}"
+														required="true" />
+
+												</h:panelGroup>
+											</p:column>
+
+
+											<p:column colspan="2">
+												<h:panelGroup>
+													<h:outputText min="0" onkeypress="mascara(this, valor);"
+														size="5" rendered="false" stepFactor="0.25" value="1" />
+												</h:panelGroup>
+											</p:column>
+											<p:column colspan="2">
+												<h:panelGroup>
+													<h:outputText min="0" onkeypress="mascara(this, valor);"
+														size="5" rendered="false" stepFactor="0.25" value="1" />
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+
+									</p:panelGrid>
+
+
+									<br />
+									<p:outputLabel id="txtLabel" value="Memo:" for="txtCampo" />
+									<h:panelGroup>
+										<p:inputTextarea id="txtCampo" autoResize="false" cols="40"
+											value="#{refra.memo}" />
+									</h:panelGroup>
+
+									<p:commandButton value="Atualizar" icon="ui-icon-pencil"
+										update=":atualizarTudo"
+										action="#{clienteBean.alterarRefracao(refra)}" />
+
+
+									<p:commandButton value="Excluir" icon="ui-icon-trash"
+										update=":atualizarTudo"
+										actionListener="#{clienteBean.excluirRefracao(refra)}">
+										<p:confirm header="Confirmação" message="Deseja Excluir?"
+											icon="ui-icon-alert" />
+									</p:commandButton>
+
+									<p:confirmDialog global="true">
+										<p:commandButton value="Sim" type="button"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="Não" type="button"
+											styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									</p:confirmDialog>
+								</p:column>
+							</p:dataTable>
+
+						</h:form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					</p:tab>
+
+					<p:tab id="tab2"
+						disabled="#{clienteBean.clienteRelatorio.nome == null}">
+
+						<f:facet name="title">
+							<p:graphicImage value="#{resource['icone3.png']}" />
+							<h:outputText value="Ceratometria" />
+						</f:facet>
+						<h:form>
+
+
+							<p:dataTable id="dataTable" var="cera"
+								value="#{clienteBean.listaCeratometria}" border="1" width="100%"
+								rowKey="#{cera.idCeratometria}" selection="#{clienteBean.cera}"
+								paginator="true" liveScroll="true" rows="1"
+								paginatorPosition="bottom"
+								emptyMessage="Sem Registros Para Exibição!!!">
+								<p:column>
+									<p:panelGrid>
+										<f:facet name="header">
+											<p:row>
+												<p:column colspan="7">Ceratometria <h:outputText
+														value="#{cera.data}" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2">
+												</p:column>
+												<p:column colspan="2">Horizontal</p:column>
+												<p:column colspan="2">Vertical</p:column>
+												<p:column colspan="2">Eixo</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2">OD
+									</p:column>
+												<p:column colspan="2">
+													<h:outputText value="#{cera.odHorizontal}" />
+												</p:column>
+												<p:column colspan="2">
+													<h:outputText value="#{cera.odVertical}" />
+												</p:column>
+												<p:column colspan="2">
+													<h:outputText value="#{cera.odEixo}" />
+
+
+												</p:column>
+											</p:row>
+
+										</f:facet>
+
+										<!--  -->
+										<p:row>
+											<p:column colspan="2" style="text-align:center;">OE
+									</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:outputText value="#{cera.oeHorizontal}" />
+											</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:outputText value="#{cera.oeVertical}" />
+											</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:outputText value="#{cera.oeEixo}" />
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+									<p:commandButton value="Excluir" icon="ui-icon-trash"
+										update=":atualizarTudo"
+										actionListener="#{clienteBean.excluirCeratometria(cera)}">
+										<p:confirm header="Confirmação" message="Deseja Excluir?"
+											icon="ui-icon-alert" />
+									</p:commandButton>
+
+
+								</p:column>
+							</p:dataTable>
+						</h:form>
+
+					</p:tab>
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<p:tab id="tab3"
+						disabled="#{clienteBean.clienteRelatorio.nome == null}">
+
+						<f:facet name="title">
+							<p:graphicImage value="#{resource['icone6.png']}" />
+							<h:outputText value="Lentes" />
+						</f:facet>
+
+						<h:form>
+
+
+							<p:dataTable id="dataTable" var="lente"
+								value="#{clienteBean.listaLente}" width="100%"
+								rowKey="#{lente.idlentes}" selection="#{clienteBean.lente}"
+								paginator="true" liveScroll="true" rows="1"
+								paginatorPosition="bottom"
+								emptyMessage="Sem Registros Para Exibição!!!">
+								<p:column>
+									<p:panelGrid>
+										<f:facet name="header">
+											<p:row>
+												<p:column colspan="16">Lentes de Contato <h:outputText
+														value="#{lente.data}" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2">
+												</p:column>
+												<p:column colspan="2">Esféricos</p:column>
+												<p:column colspan="2">Cilindro</p:column>
+												<p:column colspan="2">Eixo</p:column>
+												<p:column colspan="2">AV</p:column>
+												<p:column colspan="2">CB</p:column>
+												<p:column colspan="2">ADIÇÃO</p:column>
+												<p:column colspan="2">AO</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2">OD
+									</p:column>
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText value="#{lente.snlOdEsferico}" />
+														<h:outputText value="#{lente.odEsferico}" />
+													</h:panelGroup>
+												</p:column>
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText value="#{lente.snlOdCilindro}" />
+														<h:outputText value="#{lente.odCilindro}" />
+													</h:panelGroup>
+												</p:column>
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText min="0" stepFactor="1.00" size="5"
+															value="#{lente.odEixo}" />
+													</h:panelGroup>
+												</p:column>
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText id="selectCampo1" value="#{lente.odAv}" />
+													</h:panelGroup>
+												</p:column>
+
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText value="#{lente.odCb}" />
+													</h:panelGroup>
+												</p:column>
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText size="5" value="#{lente.adicaoOd}" />
+													</h:panelGroup>
+												</p:column>
+
+												<p:column colspan="2">
+													<h:panelGroup>
+														<h:outputText id="selectCampo" value="#{lente.ao}" />
+
+													</h:panelGroup>
+
+
+												</p:column>
+											</p:row>
+
+										</f:facet>
+
+										<p:row>
+											<p:column colspan="2" style="text-align:center;">OE
+									</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<h:outputText value="#{lente.snlOeEsferico}" />
+													<h:outputText value="#{lente.oeEsferico}" />
+												</h:panelGroup>
+											</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<h:outputText value="#{lente.snlOeCilindro}" />
+
+													<h:outputText value="#{lente.oeCilindro}" />
+												</h:panelGroup>
+											</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<h:outputText value="#{lente.oeEixo}" />
+												</h:panelGroup>
+											</p:column>
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<h:outputText id="selectCampo5" value="#{lente.oeAv}" />
+
+												</h:panelGroup>
+
+
+											</p:column>
+
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<h:outputText value="#{lente.oeCb}" />
+												</h:panelGroup>
+											</p:column>
+
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<h:outputText size="5" value="#{lente.adicaoOe}" />
+												</h:panelGroup>
+											</p:column>
+
+											<p:column colspan="2" style="text-align:center;">
+												<h:panelGroup>
+													<p:spinner min="0" onkeypress="mascara(this, valor);"
+														size="5" rendered="false" stepFactor="0.25" value="1" />
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+
+									</p:panelGrid>
+
+									<p:panel style="border:none;" id="panel" styleClass="panel">
+										<h:panelGrid columns="6">
+											<p:outputLabel id="NomeLabel" value="Marca: " for="NomeCampo" />
+											<h:panelGroup>
+												<h:outputText id="NomeCampo" value="#{lente.marca}"
+													style="text-transform:uppercase;" size="40" maxlength="40"
+													required="true" requiredMessage="O nome é obrigatório." />
+											</h:panelGroup>
+
+											<p:outputLabel id="SiglaLabel" value="Dados:"
+												for="SiglaCampo" />
+											<h:panelGroup>
+												<h:outputText id="SiglaCampo"
+													style="text-transform:uppercase;"
+													value="#{lente.dadosLente}" size="35" maxlength="50"
+													required="true" requiredMessage="A data é obrigatória.">
+
+
+												</h:outputText>
+											</h:panelGroup>
+
+											<p:outputLabel id="dataLabel" value="Data Entrega:"
+												for="dataCampo" />
+											<h:panelGroup>
+												<h:outputText id="dataCampo" value="#{lente.dtaEntrega}"
+													size="15" maxlength="12" required="true"
+													requiredMessage="A Data é obrigatório." navigator="true"
+													display="inline" pattern="dd/MM/yyyy">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</h:outputText>
+											</h:panelGroup>
+
+
+
+											<p:outputLabel id="celLabel" value="Cor:" for="celCampo" />
+											<h:panelGroup>
+												<h:outputText id="celCampo" value="#{lente.cor}"
+													style="text-transform:uppercase;" size="15" maxlength="30" />
+											</h:panelGroup>
+
+											<p:outputLabel id="endLabel" value="Técnico:" for="endCampo" />
+											<h:panelGroup>
+												<h:outputText id="endCampo" value="#{lente.tecnico}">
+
+
+												</h:outputText>
+											</h:panelGroup>
+
+											<p:outputLabel id="telLabel" value="Tipo:" for="telCampo" />
+											<h:panelGroup>
+												<h:outputText id="telCampo" value="#{lente.tipo}"
+													style="text-transform:uppercase;" size="15" maxlength="50" />
+											</h:panelGroup>
+
+
+											<h:outputText value="Lentes: " />
+											<p:selectBooleanButton value="#{lente.usaLentes}"
+												disabled="true" onLabel="Sim" offLabel="Não"
+												onIcon="ui-icon-check" offIcon="ui-icon-close">
+											</p:selectBooleanButton>
+											<p:outputLabel id="prodLabel" value="P. Limpeza:"
+												for="proCampo" />
+											<h:panelGroup>
+												<h:outputText id="proCampo" value="#{lente.produtoLimpeza}"
+													style="text-transform:uppercase;" size="15" maxlength="50" />
+											</h:panelGroup>
+											<p:outputLabel id="txtLabel" value="Memo:" for="txtCampo" />
+											<h:panelGroup>
+
+												<p:inputTextarea id="txtCampo" autoResize="false"
+													style="text-transform:uppercase;" cols="40"
+													value="#{lente.memo}" />
+											</h:panelGroup>
+
+										</h:panelGrid>
+
+
+
+
+
+									</p:panel>
+									<p:commandButton value="Atualizar" icon="ui-icon-pencil"
+										update=":atualizarTudo"
+										action="#{clienteBean.alterarLentes(lente)}" />
+
+
+									<p:commandButton value="Excluir" icon="ui-icon-trash"
+										update=":atualizarTudo"
+										actionListener="#{clienteBean.excluirLentes(lente)}">
+										<p:confirm header="Confirmação" message="Deseja Excluir?"
+											icon="ui-icon-alert" />
+									</p:commandButton>
+
+									<p:confirmDialog global="true">
+										<p:commandButton value="Sim" type="button"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="Não" type="button"
+											styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									</p:confirmDialog>
+								</p:column>
+							</p:dataTable>
+						</h:form>
+					</p:tab>
+
+
+				</p:tabView>
+			</p:outputPanel>
+
+
+
+
+		</f:view>
+	</ui:define>
+</ui:composition>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/facelets/template.xhtml">
+	<ui:define name="title">
+		<title>SisOtica</title>
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view>
+
+			<h:form id="form">
+				<p:growl id="msg" autoUpdate="true"/>
+				<p:ajaxStatus onstart="dialogAguarde.show()"
+					oncomplete="dialogAguarde.hide();" />
+				<p:dialog widgetVar="dialogAguarde" resizable="false"
+					closable="false" modal="true" header="Aguarde...">
+					<img
+						src="#{facesContext.externalContext.request.contextPath}/resources/ajaxLoading.gif"
+						width="20px" />
+				</p:dialog>
+				<t:saveState value="#{medicoBean.listagem}" />
+				<t:saveState value="#{medicoBean.medicoSelecionado}" />
+				<t:saveState value="#{medicoBean.registro}" />
+
+				<p:panel id="panel" header="Pesquisa de Médicos por Nome"
+					style="margin-bottom:10px;">
+					<h:panelGrid columns="4">
+
+						<p:outputLabel id="filtroLabel" value="Nome:" for="filtroCampo" />
+						<h:panelGroup>
+							<p:inputText id="filtroCampo" value="#{medicoBean.filtro}"
+								size="30" maxlength="30" required="true"
+								requiredMessage="Idenfificador obrigatório." />
+
+						</h:panelGroup>
+
+						<p:commandButton id="listar" value="Pesquisar"
+							icon="ui-icon-search" actionListener="#{medicoBean.listarLike}"
+							type="submit" update="panel" />
+					</h:panelGrid>
+					<p />
+					<p />
+
+
+
+					<p:dataTable var="medico" value="#{medicoBean.listagem}" id="teste"
+						border="1" width="100%" rowKey="#{medico.idmedico}"
+						paginator="true" paginatorPosition="bottom" rows="7"
+						emptyMessage="Sem Registros Para Exibição!!!"
+						rendered="#{medicoBean.listagem != null}">
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Nome" />
+							</f:facet>
+							<h:outputText value="#{medico.nome}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="CRM" />
+							</f:facet>
+							<h:outputText value="#{medico.crm} " />
+						</p:column>
+
+						
+
+						<p:column style="width:32px;text-align: center">
+							<f:facet name="header">
+								<h:outputText value="Editar" />
+							</f:facet>
+							<p:commandButton oncomplete="PF('carDialog').show()"
+								icon="ui-icon-pencil" title="View" update=":form:panel">
+
+								<f:setPropertyActionListener value="#{medico}"
+									target="#{medicoBean.registro}" />
+
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+
+					<p:dialog header="Alteração de Médico" widgetVar="carDialog"
+						modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+						<p:outputPanel id="carDetail">
+							<h:panelGrid columns="2">
+								<p:outputLabel id="NomeLabel" value="Nome: " for="NomeCampo" />
+								<h:panelGroup>
+									<p:inputText id="NomeCampo" value="#{medicoBean.registro.nome}"
+										style="text-transform:uppercase;" size="40" maxlength="40" />
+
+								</h:panelGroup>
+
+
+
+
+								<p:outputLabel id="endLabel" value="CRM:" for="endCampo" />
+								<h:panelGroup>
+									<p:inputText id="endCampo" style="text-transform:uppercase;"
+										value="#{medicoBean.registro.crm}" size="30" maxlength="50" />
+								</h:panelGroup>
+
+
+							</h:panelGrid>
+
+							<p:commandButton id="incluir" value="Alterar"
+								action="#{medicoBean.alterar}" type="submit" icon="ui-icon-disk"
+								ajax="true" />
+						</p:outputPanel>
+					</p:dialog>
+
+
+					<p />
+
+				</p:panel>
+			</h:form>
+
+		</f:view>
+
+
+
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

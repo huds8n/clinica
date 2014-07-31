@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/facelets/template.xhtml">
+	<ui:define name="title">
+		<title>SisOtica</title>
+	</ui:define>
+
+	<ui:define name="content">
+		<script type="text/javascript">
+			PrimeFaces.locales['pt_BR'] = {
+				closeText : 'Fechar',
+				prevText : 'Anterior',
+				nextText : 'Próximo',
+				currentText : 'Começo',
+				monthNames : [ 'Janeiro', 'Fevereiro', 'Março', 'Abril',
+						'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro',
+						'Outubro', 'Novembro', 'Dezembro' ],
+				monthNamesShort : [ 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+						'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez' ],
+				dayNames : [ 'Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta',
+						'Sexta', 'Sábado' ],
+				dayNamesShort : [ 'Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex',
+						'Sáb' ],
+				dayNamesMin : [ 'D', 'S', 'T', 'Q', 'Q', 'S', 'S' ],
+				weekHeader : 'Semana',
+				firstDay : 1,
+				isRTL : false,
+				showMonthAfterYear : false,
+				yearSuffix : '',
+				timeOnlyTitle : 'Só Horas',
+				timeText : 'Tempo',
+				hourText : 'Hora',
+				minuteText : 'Minuto',
+				secondText : 'Segundo',
+				currentText : 'Data/Hora Atual',
+				ampm : false,
+				month : 'Mês',
+				week : 'Semana',
+				day : 'Dia',
+				allDayText : 'Todo Dia'
+			};
+		</script>
+
+		<f:view>
+
+			<p:tabView id="tabView">
+				<h:outputLabel id="funcCampo"
+					value="#{clienteBean.clienteSelecionado.nome}" />
+				<p:tab id="tab0">
+
+					<f:facet name="title">
+						<p:graphicImage value="#{resource['icone4.png']}" />
+						<h:outputText value="Cliente" />
+					</f:facet>
+
+					<h:form id="formPesquisa">
+
+						<p:ajaxStatus onstart="dialogAguarde.show()"
+							oncomplete="dialogAguarde.hide();" />
+						<p:dialog widgetVar="dialogAguarde" resizable="false"
+							closable="false" modal="true" header="Aguarde...">
+							<img
+								src="#{facesContext.externalContext.request.contextPath}/resources/ajaxLoading.gif"
+								width="20px" />
+						</p:dialog>
+					
+							<h:panelGrid columns="4">
+
+								<p:outputLabel id="filtroLabel" value="Nome:" for="filtroCampo" />
+								<h:panelGroup>
+									<p:inputText id="filtroCampo" value="#{clienteBean.filtro}"
+										size="30" maxlength="30" required="true"
+										requiredMessage="Idenfificador obrigatório." />
+								</h:panelGroup>
+
+								<p:commandButton id="listar" value="Pesquisar"
+									icon="ui-icon-search"
+									actionListener="#{clienteBean.listarLike}" type="submit"
+									update=":tabView:formPesquisa" />
+							</h:panelGrid>
+							<p />
+							<p />
+
+
+
+							<p:dataTable var="cliente" value="#{clienteBean.listagem}"
+								id="teste" border="1" width="100%"
+								rowKey="#{cliente.codCliente}"
+								selection="#{clienteBean.clienteSelecionado}"
+								selectionMode="single" paginator="true"
+								paginatorPosition="bottom" rows="8"
+								emptyMessage="Sem Registros Para Exibição!!!"
+								rendered="#{clienteBean.listagem != null}">
+
+								<p:ajax event="rowSelect" update=":tabView" />
+
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Nome" />
+									</f:facet>
+									<h:outputText value="#{cliente.nome}" />
+								</p:column>
+
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Dt Nasc." />
+									</f:facet>
+									<h:outputText value="#{cliente.dataNascimento}">
+										<f:convertDateTime pattern="dd/MM/yy" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Celular" />
+									</f:facet>
+									<h:outputText value="#{cliente.celular} " />
+								</p:column>
+
+							</p:dataTable>
+
+
+							<p:growl id="messagens" />
+						
+					</h:form>
+				</p:tab>
+
+				<p:tab id="tab1"
+					disabled="#{clienteBean.clienteSelecionado.nome == null}">
+
+
+					<f:facet name="title">
+						<p:graphicImage value="#{resource['icone2.png']}" />
+						<h:outputText value="Agendamento" />
+					</f:facet>
+					<h:form id="formAgenda">
+						<h:panelGrid columns="2">
+
+
+							<p:outputLabel id="dataLabel" value="Data:" for="dataCampo" />
+							<h:panelGroup>
+								<p:calendar id="dataCampo"
+									value="#{agendaBean.registro.dataAgenda}" size="15"
+									maxlength="12" required="true"
+									requiredMessage="A Data é obrigatório." navigator="true"
+									display="inline" pattern="dd/MM/yyyy">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:calendar>
+							</h:panelGroup>
+
+							<p:outputLabel id="idTimeLabel" value="Hora:" for="timeCampo" />
+							<h:panelGroup>
+								<p:calendar id="timeCampo"
+									value="#{agendaBean.registro.horaRetor}" size="10"
+									maxlength="10" required="true" pattern="HH:mm" timeOnly="true"
+									requiredMessage="a Saida é obrigatório." showButtonPanel="true"
+									converterMessage="Identificador deve ser um valor numérico."
+									mask="99:99">
+								</p:calendar>
+								<h:message for="timeCampo" showSummary="true" showDetail="false" />
+							</h:panelGroup>
+
+							<p:outputLabel id="txtLabel" value="Obs:" for="txtCampo" />
+							<h:panelGroup>
+								<p:inputTextarea id="txtCampo" autoResize="false"
+									style="text-transform:uppercase;" cols="40"
+									value="#{agendaBean.registro.obs}" />
+							</h:panelGroup>
+
+
+							<h:outputLabel id="func" value="Cliente: " for="funcCampo" />
+							<h:outputLabel id="funcCampo"
+								value="#{clienteBean.clienteSelecionado.nome}" />
+
+						</h:panelGrid>
+
+						<h:panelGrid columns="4">
+							<p:commandButton id="incluir" value="Incluir"
+								action="#{agendaBean.incluir}" type="submit" icon="ui-icon-disk"
+								ajax="false"
+								rendered="#{clienteBean.clienteSelecionado.nome != null}">
+
+								<f:setPropertyActionListener
+									value="#{clienteBean.clienteSelecionado}"
+									target="#{agendaBean.cliente}" />
+
+
+							</p:commandButton>
+							<p:commandButton id="limpar" value="Limpar" type="reset"
+								icon="ui-icon-star" />
+							<p:growl id="growl" showDetail="true" />
+
+							<h:outputLink
+								value="#{facesContext.externalContext.request.contextPath}/paginas/index.xhtml">
+								<img
+									src="#{facesContext.externalContext.request.contextPath}/resources/voltar.png"
+									width="45px" />
+							</h:outputLink>
+						</h:panelGrid>
+					</h:form>
+				</p:tab>
+			</p:tabView>
+
+
+
+
+		</f:view>
+	</ui:define>
+</ui:composition>
+
+</html>

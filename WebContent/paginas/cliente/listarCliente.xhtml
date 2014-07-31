@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/facelets/template.xhtml">
+	<ui:define name="title">
+		<title>SisOtica</title>
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view contentType="text/html; charset=ISO-8859-1">
+			<h:form>
+				<f:metadata>
+					<f:event type="preRenderView" listener="#{clienteBean.listarTudo}" />
+				</f:metadata>
+				<p:panel id="panel" header="Listagem de Clientes"
+					style="margin-bottom:10px;">
+					<p:growl id="growl" showDetail="true" />
+					<t:saveState value="#{clienteBean.listagem}" />
+					<t:saveState value="#{clienteBean.clienteSelecionado}" />
+					<t:saveState value="#{clienteBean.registro}" />
+
+					<p:dataTable var="cliente" value="#{clienteBean.listagem}"
+						border="1" width="100%" rowKey="#{cliente.codCliente}"
+						selection="#{clienteBean.clienteSelecionado}"
+						selectionMode="single" paginator="true"
+						rowsPerPageTemplate="5,10,15,20,25,50,100"
+						paginatorPosition="bottom" rows="10"
+						emptyMessage="Sem Registros Para Exibição!!!">
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Nome" />
+							</f:facet>
+							<h:outputText value="#{cliente.nome}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Dt Nasc." />
+							</f:facet>
+							<h:outputText value="#{cliente.dataNascimento}">
+								<f:convertDateTime pattern="dd/MM/yy" />
+							</h:outputText>
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Celular" />
+							</f:facet>
+							<h:outputText value="#{cliente.celular} " />
+						</p:column>
+						<p:column style="width: 60px;">
+							<f:facet name="header">
+								<h:outputText value="Opções" />
+							</f:facet>
+							<p:commandLink id="editar" value="Editar"
+								onclick="dlgEdit.show()" image="ui-icon ui-icon-close">
+							</p:commandLink>
+							<p:dialog header="Atenção!" widgetVar="dlgEdit" resizable="false"
+								modal="true">
+			    Confirma a Alteração deste registro?
+				<h:panelGrid columns="2" style="margin-bottom:10px">
+									<p:commandButton value="Sim" ajax="false" type="submit"
+										oncomplete="dlgEdit.hide();" action="#{clienteBean.editar}">
+										<f:setPropertyActionListener value="#{cliente}"
+											target="#{clienteBean.registro}" />
+									</p:commandButton>
+									<p:commandButton value="Não" oncomplete="dlgEdit.hide();" />
+								</h:panelGrid>
+							</p:dialog>
+							<p:spacer height="10" />
+						</p:column>
+					</p:dataTable>
+
+
+					<h:outputLink
+						value="#{facesContext.externalContext.request.contextPath}/paginas/index.xhtml">
+						<img
+							src="#{facesContext.externalContext.request.contextPath}/resources/voltar.png"
+							width="45px" />
+					</h:outputLink>
+				</p:panel>
+			</h:form>
+			<h:messages layout="table" errorStyle="color: red"
+				infoStyle="color: green" warnStyle="color: orange"
+				fatalStyle="color: gray" showDetail="false" />
+		</f:view>
+	</ui:define>
+</ui:composition>
+
+</html>

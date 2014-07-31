@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/facelets/template.xhtml">
+	<ui:define name="title">
+		<title>Agentes</title>
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view>
+			<h:form>
+				<t:saveState value="#{agendaBean.listagem}" />
+				<t:saveState value="#{agendaBean.registro}" />
+				<t:saveState value="#{agendaBean.agendaSelecionada}" />
+
+				<p:panel id="panel" header="Alteração de Agendamento"
+					style="margin-bottom:10px;">
+
+
+					<h:panelGrid columns="2">
+						<p:outputLabel id="dataLabel" value="Data:" for="dataCampo" />
+						<h:panelGroup>
+							<p:calendar id="dataCampo"
+								value="#{agendaBean.registro.dataAgenda}" size="15"
+								maxlength="12" required="true"
+								requiredMessage="A Data é obrigatório." pages="2"
+								pattern="dd/MM/yyyy">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:calendar>
+						</h:panelGroup>
+
+						<p:outputLabel id="idTimeLabel" value="Hora:" for="timeCampo" />
+						<h:panelGroup>
+							<p:inputMask id="timeCampo"
+								value="#{agendaBean.registro.horaAgenda}" size="10"
+								maxlength="10" required="true" pattern="HH:mm" timeOnly="true"
+								requiredMessage="a Saida é obrigatório." showButtonPanel="true"
+								converterMessage="Identificador deve ser um valor numérico."
+								mask="99:99">
+							</p:inputMask>
+							<h:message for="timeCampo" showSummary="true" showDetail="false" />
+						</h:panelGroup>
+
+						<p:outputLabel id="txtLabel" value="Obs:" for="txtCampo" />
+						<h:panelGroup>
+							<p:inputTextarea id="txtCampo" style="text-transform:uppercase;"
+								cols="40" value="#{agendaBean.registro.obs}" />
+						</h:panelGroup>
+
+						<p:outputLabel id="UFLabel" value="Status: " for="UFCampo" />
+						<h:panelGroup>
+							<p:selectOneMenu id="UFCampo"
+								value="#{agendaBean.registro.status}" required="true">
+								<f:selectItem itemValue="ATIVO" itemLabel="ATIVO" />
+								<f:selectItem itemValue="CANCELADO" itemLabel="CANCELADO" />
+								<f:selectItem itemValue="ATENDIDO" itemLabel="ATENDIDO" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+						<h:outputLabel id="func" value="Cliente: " for="funcCampo" />
+						<h:outputLabel id="funcCampo"
+							value="#{agendaBean.registro.cliente.nome}" />
+
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:commandButton id="incluir" value="Alterar"
+							action="#{agendaBean.alterar}" type="submit" icon="ui-icon-disk"
+							ajax="false" />
+					</h:panelGrid>
+
+				</p:panel>
+
+				<h:outputLink value="#{facesContext.externalContext.request.contextPath}/paginas/index.xhtml">
+					<img
+						src="#{facesContext.externalContext.request.contextPath}/resources/voltar.png"
+						width="45px" />
+				</h:outputLink>
+				<h:messages layout="table" errorStyle="color: red"
+					infoStyle="color: green" warnStyle="color: orange"
+					fatalStyle="color: gray" showDetail="false" />
+
+			</h:form>
+
+		</f:view>
+	</ui:define>
+</ui:composition>
+
+</html>

@@ -1,0 +1,849 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/facelets/template.xhtml">
+	<ui:define name="title">
+		<title>SisOtica</title>
+	</ui:define>
+
+	<ui:define name="content">
+		<script type="text/javascript">
+			PrimeFaces.locales['pt_BR'] = {
+				closeText : 'Fechar',
+				prevText : 'Anterior',
+				nextText : 'Próximo',
+				currentText : 'Começo',
+				monthNames : [ 'Janeiro', 'Fevereiro', 'Março', 'Abril',
+						'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro',
+						'Outubro', 'Novembro', 'Dezembro' ],
+				monthNamesShort : [ 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+						'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez' ],
+				dayNames : [ 'Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta',
+						'Sexta', 'Sábado' ],
+				dayNamesShort : [ 'Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex',
+						'Sáb' ],
+				dayNamesMin : [ 'D', 'S', 'T', 'Q', 'Q', 'S', 'S' ],
+				weekHeader : 'Semana',
+				firstDay : 1,
+				isRTL : false,
+				showMonthAfterYear : false,
+				yearSuffix : '',
+				timeOnlyTitle : 'Só Horas',
+				timeText : 'Tempo',
+				hourText : 'Hora',
+				minuteText : 'Minuto',
+				secondText : 'Segundo',
+				currentText : 'Data/Hora Atual',
+				ampm : false,
+				month : 'Mês',
+				week : 'Semana',
+				day : 'Dia',
+				allDayText : 'Todo Dia'
+			};
+		</script>
+
+		<script>
+			function mascara(o, f) {
+				v_obj = o;
+				v_fun = f;
+				setTimeout("execmascara()", 1);
+			}
+
+			function execmascara() {
+				v_obj.value = v_fun(v_obj.value);
+			}
+
+			function valor(v) {
+				v = v.replace(/\D/g, "");
+				v = v.replace(/[0-9]{15}/, "invÃ¡lido");
+				v = v.replace(/(\d{1})(\d{11})$/, "$1.$2"); // coloca ponto antes dos  
+				// Ãºltimos 11 digitos  
+				v = v.replace(/(\d{1})(\d{8})$/, "$1.$2"); // coloca ponto antes dos  
+				// Ãºltimos 8 digitos  
+				v = v.replace(/(\d{1})(\d{5})$/, "$1.$2"); // coloca ponto antes dos  
+				// Ãºltimos 5 digitos  
+				v = v.replace(/(\d{1})(\d{1,2})$/, "$1.$2"); // coloca virgula antes dos  
+				// Ãºltimos 2 digitos  
+				return v;
+			}
+		</script>
+
+		<f:view>
+			<p:growl id="growl" showDetail="true" />
+			<t:saveState value="#{lenteBean.listagem}" />
+			<t:saveState value="#{lenteBean.registro}" />
+			<t:saveState value="#{refraBean.listagem}" />
+			<t:saveState value="#{refraBean.registro}" />
+			<t:saveState value="#{ceraBean.listagem}" />
+			<t:saveState value="#{ceraBean.registro}" />
+			<t:saveState value="#{clienteBean.listagem}" />
+			<t:saveState value="#{clienteBean.clienteSelecionado}" />
+			<t:saveState value="#{clienteBean.registro}" />
+
+			<center>
+				<p:outputLabel value="#{clienteBean.clienteSelecionado.nome}"
+					id="nomeCliente" style="font-family: sans-serif !important;" />
+			</center>
+
+
+			<p:outputPanel autoUpdate="true">
+
+				<p:ajaxStatus onstart="dialogAguarde.show()"
+					oncomplete="dialogAguarde.hide();" />
+				<p:dialog widgetVar="dialogAguarde" resizable="false"
+					closable="false" modal="true" header="Aguarde...">
+					<img
+						src="#{facesContext.externalContext.request.contextPath}/resources/ajaxLoading.gif"
+						width="20px" />
+				</p:dialog>
+				<p:tabView id="tabView">
+					<h:outputLabel id="funcCampo"
+						value="#{clienteBean.clienteSelecionado.nome}" />
+					<p:tab id="tab0">
+
+						<f:facet name="title">
+							<p:graphicImage value="#{resource['icone4.png']}" />
+							<h:outputText value="Cliente" />
+						</f:facet>
+						<h:form>
+							<h:panelGrid columns="4">
+								<p:growl id="messages" />
+								<p:outputLabel id="filtroLabel" value="Nome:" for="filtroCampo" />
+								<h:panelGroup>
+									<p:inputText id="filtroCampo" value="#{clienteBean.filtro}"
+										size="30" maxlength="30" required="true"
+										requiredMessage="O nome é obrigatorio" />
+								</h:panelGroup>
+
+								<p:commandButton id="listar" value="Pesquisar"
+									icon="ui-icon-search"
+									actionListener="#{clienteBean.listarLike}" type="submit" />
+							</h:panelGrid>
+							<p />
+							<p />
+
+
+
+							<p:dataTable var="cliente" value="#{clienteBean.listagem}"
+								id="teste" border="1" width="100%"
+								rowKey="#{cliente.codCliente}"
+								selection="#{clienteBean.clienteSelecionado}"
+								selectionMode="single" paginator="true"
+								paginatorPosition="bottom" rows="8"
+								emptyMessage="Sem Registros Para Exibição!!!"
+								rendered="#{clienteBean.listagem != null}">
+								<p:ajax event="rowSelect" update=":tabView :nomeCliente" />
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Nome" />
+									</f:facet>
+									<h:outputText value="#{cliente.nome}" />
+								</p:column>
+
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Dt Nasc." />
+									</f:facet>
+									<h:outputText value="#{cliente.dataNascimento}">
+										<f:convertDateTime pattern="dd/MM/yy" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Celular" />
+									</f:facet>
+									<h:outputText value="#{cliente.celular} " />
+								</p:column>
+
+							</p:dataTable>
+						</h:form>
+					</p:tab>
+
+					<p:tab id="tab1"
+						disabled="#{clienteBean.clienteSelecionado.nome == null}">
+
+						<f:facet name="title">
+							<p:graphicImage value="#{resource['icone2.png']}" />
+							<h:outputText value="Refração" />
+						</f:facet>
+						<h:form id="form1">
+							<h:panelGrid columns="4">
+
+								<p:outputLabel id="UFLabel" value="Medico:" for="UFCampo" />
+								<h:panelGroup>
+									<p:selectOneMenu id="UFCampo" value="#{refraBean.registro.dr}"
+										onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:select1').focus();return false;}"
+										panelStyle="width:250px" effect="fade" var="t"
+										style="width:230px" filter="true" filterMatchMode="startsWith">
+										<f:selectItems value="#{refraBean.medicos}" var="theme"
+											itemLabel="#{theme.nome}" itemValue="#{theme}" />
+
+										<p:column>
+											<h:outputText value="#{t.nome}" />
+										</p:column>
+									</p:selectOneMenu>
+								</h:panelGroup>
+							</h:panelGrid>
+
+
+
+							<p:panelGrid>
+								<f:facet name="header">
+									<p:row>
+										<p:column colspan="16">Refração</p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="2">
+										</p:column>
+										<p:column colspan="2">Esféricos</p:column>
+										<p:column colspan="2">Cilindro</p:column>
+										<p:column colspan="2">Eixo</p:column>
+										<p:column colspan="2">AV</p:column>
+										<p:column colspan="2">AO</p:column>
+										<p:column colspan="2">ADIÇÃO</p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="2">OD
+									</p:column>
+										<p:column colspan="2">
+											<h:panelGroup>
+												<h:selectOneMenu value="#{refraBean.registro.snlOdEsferico}"
+													id="select1"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:spiner1_input').focus();return false;}">
+													<f:selectItem itemValue="+" itemLabel="+" />
+													<f:selectItem itemValue="-" itemLabel="-" />
+												</h:selectOneMenu>
+												<p:spinner min="0"
+													onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form1:test').focus();return false;}"
+													size="5" stepFactor="0.25" id="spiner1"
+													value="#{refraBean.registro.odEsferico}" />
+											</h:panelGroup>
+										</p:column>
+										<p:column colspan="2">
+											<h:panelGroup>
+												<h:selectOneMenu value="#{refraBean.registro.snlOdCilindro}"
+													id="test"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:spiner2_input').focus();return false;}">
+													<f:selectItem itemValue="-" itemLabel="-" />
+													<f:selectItem itemValue="" itemLabel=" " />
+												</h:selectOneMenu>
+												<p:spinner min="0"
+													onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form1:spiner3_input').focus();return false;}"
+													id="spiner2" size="5" stepFactor="0.25"
+													value="#{refraBean.registro.odCilindro}" />
+											</h:panelGroup>
+										</p:column>
+										<p:column colspan="2">
+											<h:panelGroup>
+												<p:spinner min="0" stepFactor="1.00" size="5" id="spiner3"
+													value="#{refraBean.registro.odEixo}"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:selectRefraAv').focus();return false;}" />
+											</h:panelGroup>
+										</p:column>
+										<p:column colspan="2">
+											<h:panelGroup>
+												<h:selectOneMenu id="selectRefraAv"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:selectRefraAo').focus();return false;}"
+													value="#{refraBean.registro.odAv}" required="true">
+													<f:selectItem itemValue="20/200" itemLabel="20/200" />
+													<f:selectItem itemValue="20/100" itemLabel="20/100" />
+													<f:selectItem itemValue="20/60" itemLabel="20/60" />
+													<f:selectItem itemValue="20/40" itemLabel="20/40" />
+													<f:selectItem itemValue="20/30" itemLabel="20/30" />
+													<f:selectItem itemValue="20/25" itemLabel="20/25" />
+													<f:selectItem itemValue="20/20" itemLabel="20/20" />
+													<f:selectItem itemValue="20/15" itemLabel="20/15" />
+													<f:selectItem itemValue="20/13" itemLabel="20/13" />
+												</h:selectOneMenu>
+											</h:panelGroup>
+										</p:column>
+
+
+										<p:column colspan="2">
+											<h:panelGroup>
+												<h:selectOneMenu id="selectRefraAo"
+													value="#{refraBean.registro.ao}" required="true"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:spiner4_input').focus();return false;}">
+													<f:selectItem itemValue="20/200" itemLabel="20/200" />
+													<f:selectItem itemValue="20/100" itemLabel="20/100" />
+													<f:selectItem itemValue="20/60" itemLabel="20/60" />
+													<f:selectItem itemValue="20/40" itemLabel="20/40" />
+													<f:selectItem itemValue="20/30" itemLabel="20/30" />
+													<f:selectItem itemValue="20/25" itemLabel="20/25" />
+													<f:selectItem itemValue="20/20" itemLabel="20/20" />
+													<f:selectItem itemValue="20/15" itemLabel="20/15" />
+													<f:selectItem itemValue="20/13" itemLabel="20/13" />
+												</h:selectOneMenu>
+											</h:panelGroup>
+										</p:column>
+
+										<p:column colspan="2">
+											<h:panelGroup>
+												<p:spinner min="0" size="5" stepFactor="1.00" id="spiner4"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:seleceOeEs').focus();return false;}"
+													value="#{refraBean.registro.adcao}" />
+											</h:panelGroup>
+										</p:column>
+									</p:row>
+
+								</f:facet>
+
+								<p:row>
+									<p:column colspan="2">OE
+									</p:column>
+									<p:column colspan="2">
+										<h:panelGroup>
+											<h:selectOneMenu value="#{refraBean.registro.snlOeEsferico}"
+												id="seleceOeEs"
+												onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:spiner5_input').focus();return false;}">
+												<f:selectItem itemValue="+" itemLabel="+" />
+												<f:selectItem itemValue="-" itemLabel="-" />
+											</h:selectOneMenu>
+											<p:spinner min="0"
+												onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form1:selecrPrime').focus();return false;}"
+												id="spiner5" size="5" stepFactor="0.25"
+												value="#{refraBean.registro.oeEsferico}" />
+										</h:panelGroup>
+									</p:column>
+									<p:column colspan="2">
+										<h:panelGroup>
+											<h:selectOneMenu value="#{refraBean.registro.snlOeCilindro}"
+												id="selecrPrime" readonly="true"
+												onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:spiner6_input').focus();return false;}">
+												<f:selectItem itemValue="-" itemLabel="-" />
+												<f:selectItem itemValue=" " itemLabel=" " />
+											</h:selectOneMenu>
+											<p:spinner min="0"
+												onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form1:spiner7_input').focus();return false;}"
+												id="spiner6" size="5" stepFactor="0.25"
+												value="#{refraBean.registro.oeCilindro}" />
+										</h:panelGroup>
+									</p:column>
+									<p:column colspan="2">
+										<h:panelGroup>
+											<p:spinner min="0" stepFactor="1.00" size="5" id="spiner7"
+												value="#{refraBean.registro.oeEixo}"
+												onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:selectRefraoeAV').focus();return false;}" />
+										</h:panelGroup>
+									</p:column>
+									<p:column colspan="2">
+										<h:panelGroup>
+											<h:selectOneMenu id="selectRefraoeAV"
+												value="#{refraBean.registro.oeAv}" required="true"
+												onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:txtLabel').focus();return false;}">
+												<f:selectItem itemValue="20/200" itemLabel="20/200" />
+												<f:selectItem itemValue="20/100" itemLabel="20/100" />
+												<f:selectItem itemValue="20/60" itemLabel="20/60" />
+												<f:selectItem itemValue="20/40" itemLabel="20/40" />
+												<f:selectItem itemValue="20/30" itemLabel="20/30" />
+												<f:selectItem itemValue="20/25" itemLabel="20/25" />
+												<f:selectItem itemValue="20/20" itemLabel="20/20" />
+												<f:selectItem itemValue="20/15" itemLabel="20/15" />
+												<f:selectItem itemValue="20/13" itemLabel="20/13" />
+											</h:selectOneMenu>
+										</h:panelGroup>
+									</p:column>
+
+
+									<p:column colspan="2">
+										<h:panelGroup>
+											<p:spinner min="0" onkeypress="mascara(this, valor);"
+												id="spiner8" size="5" rendered="false" stepFactor="0.25"
+												value="1" />
+										</h:panelGroup>
+									</p:column>
+									<p:column colspan="2">
+										<h:panelGroup>
+											<p:spinner min="0" onkeypress="mascara(this, valor);"
+												size="5" rendered="false" stepFactor="0.25" value="1" />
+										</h:panelGroup>
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+							<h:panelGrid columns="2">
+
+								<p:outputLabel id="txtLabel" value="Memo:" for="txtCampo" />
+								<h:panelGroup>
+									<p:inputTextarea id="txtCampo" autoResize="false"
+										onkeypress="if(event.keyCode==13){document.getElementById('tabView:form1:incluir').focus();return false;}"
+										style="text-transform:uppercase;" cols="40"
+										value="#{refraBean.registro.memo}" />
+								</h:panelGroup>
+							</h:panelGrid>
+
+
+							<h:panelGrid columns="4">
+								<p:commandButton id="incluir" value="Incluir"
+									action="#{refraBean.incluir}" type="submit" icon="ui-icon-disk"
+									ajax="true"
+									rendered="#{clienteBean.clienteSelecionado.nome != null}">
+
+									<f:setPropertyActionListener
+										value="#{clienteBean.clienteSelecionado}"
+										target="#{refraBean.cliente}" />
+
+
+								</p:commandButton>
+								<p:commandButton id="limpar" value="Zerar" type="reset"
+									icon="ui-icon-star" />
+							</h:panelGrid>
+						</h:form>
+
+
+					</p:tab>
+
+					<p:tab id="tab2"
+						disabled="#{clienteBean.clienteSelecionado.nome == null}">
+
+						<f:facet name="title">
+							<p:graphicImage value="#{resource['icone3.png']}" />
+							<h:outputText value="Ceratometria" />
+						</f:facet>
+						<h:form id="form2">
+							<p:panelGrid>
+								<f:facet name="header">
+									<p:row>
+										<p:column colspan="7">Ceratometria</p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="2">
+										</p:column>
+										<p:column colspan="2">Horizontal</p:column>
+										<p:column colspan="2">Vertical</p:column>
+										<p:column colspan="2">Eixo</p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="2">OD
+									</p:column>
+										<p:column colspan="2">
+											<p:spinner min="0"
+												onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form2:spiner1_input').focus();return false;}"
+												stepFactor="0.25" value="#{ceraBean.registro.odHorizontal}" />
+										</p:column>
+										<p:column colspan="2">
+											<p:spinner min="0" id="spiner1"
+												onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form2:spiner2_input').focus();return false;}"
+												stepFactor="0.25" value="#{ceraBean.registro.odVertical}"></p:spinner>
+										</p:column>
+										<p:column colspan="2">
+											<p:spinner min="0" stepFactor="1.00" id="spiner2"
+												onkeypress="if(event.keyCode==13){document.getElementById('tabView:form2:spiner3_input').focus();return false;}"
+												value="#{ceraBean.registro.odEixo}">
+
+											</p:spinner>
+										</p:column>
+									</p:row>
+
+								</f:facet>
+
+								<!--  -->
+								<p:row>
+									<p:column colspan="2">OE
+									</p:column>
+									<p:column colspan="2">
+										<p:spinner min="0"
+											onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form2:spiner4_input').focus();return false;}"
+											id="spiner3" stepFactor="0.25"
+											value="#{ceraBean.registro.oeHorizontal}" />
+									</p:column>
+									<p:column colspan="2">
+										<p:spinner min="0"
+											onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form2:spiner5_input').focus();return false;}"
+											id="spiner4" stepFactor="0.25"
+											value="#{ceraBean.registro.oeVertical}"></p:spinner>
+									</p:column>
+									<p:column colspan="2">
+										<p:spinner min="0" stepFactor="1.00"
+											onkeypress="if(event.keyCode==13){document.getElementById('tabView:form2:incluir').focus();return false;}"
+											id="spiner5" value="#{ceraBean.registro.oeEixo}">
+										</p:spinner>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<h:panelGrid columns="4">
+								<p:commandButton id="incluir" value="Incluir"
+									action="#{ceraBean.incluir}" type="submit" icon="ui-icon-disk"
+									ajax="false"
+									rendered="#{clienteBean.clienteSelecionado.nome != null}">
+
+									<f:setPropertyActionListener
+										value="#{clienteBean.clienteSelecionado}"
+										target="#{ceraBean.cliente}" />
+
+
+								</p:commandButton>
+								<p:commandButton id="limpar" value="Zerar" type="reset"
+									icon="ui-icon-star" />
+							</h:panelGrid>
+						</h:form>
+					</p:tab>
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<!-- LENTES -->
+					<p:tab id="tab3"
+						disabled="#{clienteBean.clienteSelecionado.nome == null}">
+
+						<f:facet name="title">
+							<p:graphicImage value="#{resource['icone6.png']}" />
+							<h:outputText value="Lentes" />
+						</f:facet>
+
+						<h:form id="form3">
+							<p:panelGrid>
+								<f:facet name="header">
+									<p:row>
+										<p:column colspan="16">Lentes de Contato</p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="2">
+										</p:column>
+										<p:column colspan="2">Esféricos</p:column>
+										<p:column colspan="2">Cilindro</p:column>
+										<p:column colspan="2">Eixo</p:column>
+										<p:column colspan="2">AV</p:column>
+										<p:column colspan="2">CB</p:column>
+										<p:column colspan="2">ADIÇÃO</p:column>
+										<p:column colspan="2">AO</p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="2">OD
+									</p:column>
+										<p:column colspan="2">
+											<h:panelGroup>
+												<h:selectOneMenu value="#{lenteBean.registro.snlOdEsferico}"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:spiner1_input').focus();return false;}">
+													<f:selectItem itemValue="+" itemLabel="+" />
+													<f:selectItem itemValue="-" itemLabel="-" />
+												</h:selectOneMenu>
+												<p:spinner min="0"
+													onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form3:select1').focus();return false;}"
+													id="spiner1" size="5" stepFactor="0.25"
+													value="#{lenteBean.registro.odEsferico}" />
+											</h:panelGroup>
+										</p:column>
+										<p:column colspan="2">
+											<h:panelGroup>
+												<h:selectOneMenu value="#{lenteBean.registro.snlOdCilindro}"
+													id="select1"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:spiner2_input').focus();return false;}">
+													<f:selectItem itemValue="-" itemLabel="-" />
+													<f:selectItem itemValue=" " itemLabel=" " />
+												</h:selectOneMenu>
+												<p:spinner min="0"
+													onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form3:spiner3_input').focus();return false;}"
+													id="spiner2" size="5" stepFactor="0.25"
+													value="#{lenteBean.registro.odCilindro}" />
+											</h:panelGroup>
+										</p:column>
+										<p:column colspan="2">
+											<h:panelGroup>
+												<p:spinner min="0" stepFactor="1.00" size="5" id="spiner3"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:selectCampo1').focus();return false;}"
+													value="#{lenteBean.registro.odEixo}" />
+											</h:panelGroup>
+										</p:column>
+										<p:column colspan="2">
+											<h:panelGroup>
+												<h:selectOneMenu id="selectCampo1"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:spiner4_input').focus();return false;}"
+													value="#{lenteBean.registro.odAv}" required="true">
+													<f:selectItem itemValue="20/200" itemLabel="20/200" />
+													<f:selectItem itemValue="20/100" itemLabel="20/100" />
+													<f:selectItem itemValue="20/60" itemLabel="20/60" />
+													<f:selectItem itemValue="20/40" itemLabel="20/40" />
+													<f:selectItem itemValue="20/30" itemLabel="20/30" />
+													<f:selectItem itemValue="20/25" itemLabel="20/25" />
+													<f:selectItem itemValue="20/20" itemLabel="20/20" />
+													<f:selectItem itemValue="20/15" itemLabel="20/15" />
+													<f:selectItem itemValue="20/13" itemLabel="20/13" />
+												</h:selectOneMenu>
+											</h:panelGroup>
+										</p:column>
+
+										<p:column colspan="2">
+											<h:panelGroup>
+												<p:spinner min="0" id="spiner4"
+													onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form3:txtad').focus();return false;}"
+													size="5" stepFactor="0.25"
+													value="#{lenteBean.registro.odCb}" />
+											</h:panelGroup>
+										</p:column>
+										<p:column colspan="2">
+											<h:panelGroup>
+												<p:inputText size="5" value="#{lenteBean.registro.adicaoOd}"
+													id="txtad"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:selectCampo').focus();return false;}" />
+											</h:panelGroup>
+										</p:column>
+
+										<p:column colspan="2">
+											<h:panelGroup>
+												<h:selectOneMenu id="selectCampo"
+													onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:selectCampo3').focus();return false;}"
+													value="#{lenteBean.registro.ao}" required="true">
+													<f:selectItem itemValue="20/200" itemLabel="20/200" />
+													<f:selectItem itemValue="20/100" itemLabel="20/100" />
+													<f:selectItem itemValue="20/60" itemLabel="20/60" />
+													<f:selectItem itemValue="20/40" itemLabel="20/40" />
+													<f:selectItem itemValue="20/30" itemLabel="20/30" />
+													<f:selectItem itemValue="20/25" itemLabel="20/25" />
+													<f:selectItem itemValue="20/20" itemLabel="20/20" />
+													<f:selectItem itemValue="20/15" itemLabel="20/15" />
+													<f:selectItem itemValue="20/13" itemLabel="20/13" />
+												</h:selectOneMenu>
+											</h:panelGroup>
+
+
+										</p:column>
+									</p:row>
+
+								</f:facet>
+
+								<p:row>
+									<p:column colspan="2">OE
+									</p:column>
+									<p:column colspan="2">
+										<h:panelGroup>
+											<h:selectOneMenu value="#{lenteBean.registro.snlOeEsferico}"
+												id="selectCampo3"
+												onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:spiner5_input').focus();return false;}">
+												<f:selectItem itemValue="+" itemLabel="+" />
+												<f:selectItem itemValue="-" itemLabel="-" />
+											</h:selectOneMenu>
+											<p:spinner min="0" id="spiner5"
+												onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form3:selectCampo6').focus();return false;}"
+												size="5" stepFactor="0.25"
+												value="#{lenteBean.registro.oeEsferico}" />
+										</h:panelGroup>
+									</p:column>
+									<p:column colspan="2">
+										<h:panelGroup>
+											<h:selectOneMenu value="#{lenteBean.registro.snlOeCilindro}"
+												id="selectCampo6"
+												onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:spiner6_input').focus();return false;}">
+												<f:selectItem itemValue="-" itemLabel="-" />
+												<f:selectItem itemValue=" " itemLabel=" " />
+											</h:selectOneMenu>
+											<p:spinner min="0" id="spiner6"
+												onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form3:spiner7_input').focus();return false;}"
+												size="5" stepFactor="0.25"
+												value="#{lenteBean.registro.oeCilindro}" />
+										</h:panelGroup>
+									</p:column>
+									<p:column colspan="2">
+										<h:panelGroup>
+											<p:spinner min="0" stepFactor="1.00" size="5" id="spiner7"
+												onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:selectCampo5').focus();return false;}"
+												value="#{lenteBean.registro.oeEixo}" />
+										</h:panelGroup>
+									</p:column>
+									<p:column colspan="2">
+										<h:panelGroup>
+											<h:selectOneMenu id="selectCampo5"
+												onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:spiner8_input').focus();return false;}"
+												value="#{lenteBean.registro.oeAv}" required="true">
+												<f:selectItem itemValue="20/200" itemLabel="20/200" />
+												<f:selectItem itemValue="20/100" itemLabel="20/100" />
+												<f:selectItem itemValue="20/60" itemLabel="20/60" />
+												<f:selectItem itemValue="20/40" itemLabel="20/40" />
+												<f:selectItem itemValue="20/30" itemLabel="20/30" />
+												<f:selectItem itemValue="20/25" itemLabel="20/25" />
+												<f:selectItem itemValue="20/20" itemLabel="20/20" />
+												<f:selectItem itemValue="20/15" itemLabel="20/15" />
+												<f:selectItem itemValue="20/13" itemLabel="20/13" />
+											</h:selectOneMenu>
+										</h:panelGroup>
+
+
+									</p:column>
+
+									<p:column colspan="2">
+										<h:panelGroup>
+											<p:spinner min="0" id="spiner8"
+												onkeypress="mascara(this, valor);if(event.keyCode==13){document.getElementById('tabView:form3:txtad2').focus();return false;}"
+												size="5" stepFactor="0.25"
+												value="#{lenteBean.registro.oeCb}" />
+										</h:panelGroup>
+									</p:column>
+
+									<p:column colspan="2">
+										<h:panelGroup>
+											<p:inputText size="5" value="#{lenteBean.registro.adicaoOe}"
+												id="txtad2"
+												onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:NomeCampo').focus();return false;}" />
+										</h:panelGroup>
+									</p:column>
+
+									<p:column colspan="2">
+										<h:panelGroup>
+											<p:spinner min="0" id="spiner9" size="5" rendered="false"
+												stepFactor="0.25" value="1" />
+										</h:panelGroup>
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+							<p:panel style="border:0px;">
+								<h:panelGrid columns="6">
+									<p:outputLabel id="NomeLabel" value="Marca: " for="NomeCampo" />
+									<h:panelGroup>
+										<p:inputText id="NomeCampo"
+											onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:SiglaCampo').focus();return false;}"
+											value="#{lenteBean.registro.marca}"
+											style="text-transform:uppercase;" size="35" maxlength="40" />
+									</h:panelGroup>
+
+									<p:outputLabel id="SiglaLabel" value="Dados:" for="SiglaCampo" />
+									<h:panelGroup>
+										<p:inputText id="SiglaCampo" style="text-transform:uppercase;"
+											onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:dataCampo_input').focus();return false;}"
+											value="#{lenteBean.registro.dadosLente}" size="35"
+											maxlength="50">
+
+										</p:inputText>
+									</h:panelGroup>
+
+									<p:outputLabel id="dataLabel" value="Data Entrega:"
+										for="dataCampo" />
+
+									<h:panelGroup>
+										<p:inputMask mask="99/99/9999" id="dataCampo" size="15"
+											maxlength="10"
+											onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:celCampo').focus();return false;}"
+											value="#{lenteBean.registro.dtaEntrega}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:inputMask>
+										<p:commandButton ajax="true" type="button"
+											onclick="PF('calendarDialog').show()" icon="ui-icon-calendar"
+											id="teste">
+										</p:commandButton>
+										<div align="center">
+											<p:dialog widgetVar="calendarDialog" width="250" height="250" modal="true"
+												resizable="false">
+												<p:calendar id="inline"
+													value="#{lenteBean.registro.dtaEntrega}" mode="inline" />
+											</p:dialog>
+										</div>
+									</h:panelGroup>
+
+
+
+									<p:outputLabel id="celLabel" value="Cor:" for="celCampo" />
+									<h:panelGroup>
+										<p:inputText id="celCampo" value="#{lenteBean.registro.cor}"
+											onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:telCampo').focus();return false;}"
+											style="text-transform:uppercase;" size="15" maxlength="30" />
+									</h:panelGroup>
+
+									<p:outputLabel id="endLabel" value="Técnico:" for="endCampo" />
+									<h:panelGroup>
+										<p:selectOneMenu id="endCampo"
+											value="#{lenteBean.registro.tecnico}"
+											onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:spiner2_input').focus();return false;}">
+											<f:selectItem itemValue="REGINALDO HELIODORO"
+												itemLabel="Reginaldo Heliodoro" />
+
+										</p:selectOneMenu>
+									</h:panelGroup>
+
+									<p:outputLabel id="telLabel" value="Tipo:" for="telCampo" />
+
+									<p:inputText id="telCampo" value="#{lenteBean.registro.tipo}"
+										onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:proCampo').focus();return false;}"
+										style="text-transform:uppercase;" size="15" maxlength="50" />
+
+
+
+									<h:outputText value="Lentes: " />
+									<p:selectBooleanButton value="#{lenteBean.registro.usaLentes}"
+										id="bolean" onLabel="Sim" offLabel="Não"
+										onIcon="ui-icon-check" offIcon="ui-icon-close"
+										onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:proCampo').focus();return false;}">
+									</p:selectBooleanButton>
+									<p:outputLabel id="prodLabel" value="Produto:" for="proCampo" />
+									<h:panelGroup>
+										<p:inputText id="proCampo"
+											onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:txtCampo').focus();return false;}"
+											value="#{lenteBean.registro.produtoLimpeza}"
+											style="text-transform:uppercase;" size="30" maxlength="50" />
+									</h:panelGroup>
+
+
+
+									<p:outputLabel id="txtLabel" value="Memo:" for="txtCampo" />
+									<h:panelGroup>
+										<p:inputTextarea id="txtCampo" autoResize="false"
+											onkeypress="if(event.keyCode==13){document.getElementById('tabView:form3:incluir').focus();return false;}"
+											style="text-transform:uppercase;" cols="40"
+											value="#{lenteBean.registro.memo}" />
+									</h:panelGroup>
+
+
+
+
+								</h:panelGrid>
+
+
+
+
+
+							</p:panel>
+							<h:panelGrid columns="2">
+								<p:commandButton id="incluir" value="Incluir"
+									action="#{lenteBean.incluir}" type="submit" icon="ui-icon-disk"
+									ajax="false"
+									rendered="#{clienteBean.clienteSelecionado.nome != null}">
+
+									<f:setPropertyActionListener
+										value="#{clienteBean.clienteSelecionado}"
+										target="#{lenteBean.cliente}" />
+
+
+								</p:commandButton>
+								<p:commandButton id="limpar" value="Zerar" type="reset"
+									icon="ui-icon-star" />
+							</h:panelGrid>
+						</h:form>
+					</p:tab>
+					<p:tab id="tab4"
+						disabled="#{clienteBean.clienteSelecionado.nome == null}">
+
+						<f:facet name="title">
+							<p:graphicImage value="#{resource['pdf_file.png']}" />
+							<h:outputText value="Relatório" />
+						</f:facet>
+
+
+						<h:form id="imagemConfirmar" target="report">
+							<h:commandLink action="#{clienteBean.gerarRelatorio}">
+								<img
+									src="#{facesContext.externalContext.request.contextPath}/resources/pdf_file.png"
+									width="45px" />
+							</h:commandLink>
+						</h:form>
+					</p:tab>
+
+
+				</p:tabView>
+			</p:outputPanel>
+
+
+
+
+		</f:view>
+	</ui:define>
+</ui:composition>
+
+</html>

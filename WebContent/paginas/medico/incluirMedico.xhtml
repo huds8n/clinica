@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/facelets/template.xhtml">
+	<ui:define name="title">
+		<title>SisOtica</title>
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view>
+			<h:form>
+				<p:panel id="panel" header="Inclusão de Médico">
+					<h:panelGrid columns="2">
+						<p:outputLabel id="NomeLabel" value="Nome: " for="NomeCampo" />
+						<h:panelGroup>
+							<p:inputText id="NomeCampo" value="#{medicoBean.registro.nome}"
+								style="text-transform:uppercase;" size="40" maxlength="40"
+								required="true" requiredMessage="O nome é obrigatório." />
+							<h:message for="NomeCampo" showSummary="true" showDetail="false" />
+						</h:panelGroup>
+
+
+						<p:outputLabel id="endLabel" value="CRM:" for="endCampo" />
+						<h:panelGroup>
+							<p:inputText id="endCampo" style="text-transform:uppercase;"
+								value="#{medicoBean.registro.crm}" size="30" maxlength="50" />
+						</h:panelGroup>
+
+						<p:outputLabel id="UFLabel" value="UF: " for="UFCampo"  />
+						<p:inputText id="UFCampo" size="4" maxlength="2" value="#{medicoBean.uf}" />
+
+					</h:panelGrid>
+
+
+				</p:panel>
+
+				<h:panelGrid columns="4">
+					<p:commandButton id="incluir" value="Incluir"
+						action="#{medicoBean.incluir}" type="submit" icon="ui-icon-disk"
+						ajax="false" />
+					<p:commandButton id="limpar" value="Limpar" type="reset"
+						icon="ui-icon-trash" />
+					<p:growl id="growl" showDetail="true" />
+					<h:outputLink value="/clinica/paginas/index.xhtml">
+						<img
+							src="#{facesContext.externalContext.request.contextPath}/resources/voltar.png"
+							width="45px" />
+					</h:outputLink>
+				</h:panelGrid>
+			</h:form>
+
+		</f:view>
+	</ui:define>
+</ui:composition>
+
+</html>

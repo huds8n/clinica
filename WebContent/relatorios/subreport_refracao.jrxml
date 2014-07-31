@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subreport_refracao" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fa5c2998-8f13-480d-88b3-acc008032e9e">
+	<property name="ireport.zoom" value="2.5445857102349088"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#C3D9D9">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#E6FFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="d873c2a9-ee7e-4cb5-8060-95c6ce579e4e"/>
+	<parameter name="CodigoCliente" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM refracao where cliente_CodCliente=$P{CodigoCliente} ORDER BY DATA DESC LIMIT 1;]]>
+	</queryString>
+	<field name="idrefracao" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Dta" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Dr" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="CRM" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Adcao" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Sinal" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Obs" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SnlODesferico" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ODesferico" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SnlOEesferico" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="OEesferico" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SnlODcilindro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ODcilindro" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SnlOEcilindro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="OEcilindro" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ODeixo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="OEeixo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ODav" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="OEav" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="AO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="memo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_CodCliente" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="medico_idmedico" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="104" splitType="Stretch">
+			<printWhenExpression><![CDATA[$F{idrefracao} > 0]]></printWhenExpression>
+			<rectangle>
+				<reportElement x="1" y="1" width="568" height="99" uuid="fbe83a48-f7f1-4f55-908e-9a583c7684fe"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="5" y="19" width="27" height="12" uuid="c5b1a27a-4fb6-411a-b020-64acbf41430d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="44" y="19" width="55" height="12" uuid="2c6df9c1-8e8b-48b5-9a64-8a00777499e9"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Dta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="32" width="39" height="13" uuid="e3c55610-ea0c-45e3-8960-e27c127cb48c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Médico:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="44" y="32" width="360" height="13" uuid="187f4630-54c5-4fab-8736-96b624e2f538"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Dr}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="44" y="50" width="33" height="11" uuid="0e563347-766a-4b01-a997-93bcb142452e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Esféricos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="99" y="50" width="39" height="11" uuid="34d78f46-1684-4857-a092-b3659eccf52d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cilindrico]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="50" width="22" height="11" uuid="ae114221-079f-4793-8ac3-2fcddb417af0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Eixo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="231" y="50" width="12" height="11" uuid="aa9edbd8-585e-4801-b091-e9bfd31aa970"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="50" width="70" height="11" uuid="f2b7b24e-1305-4d6a-a6eb-ba8ad4b3ec2d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ambos Olhos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="50" width="37" height="11" uuid="9a79f3a6-9feb-43af-b935-4637156afff0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Adição]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="22" y="63" width="16" height="13" uuid="29ded2dd-90c7-42c9-8377-3a31e144d7ca"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="22" y="78" width="16" height="13" uuid="2d1d28c0-de2b-4347-a9dc-f5269cd08d5f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OE]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="43" y="63" width="16" height="13" uuid="dafb3083-8c37-4a85-96ff-3ac40a2fae03"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SnlODesferico}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="54" y="63" width="26" height="13" uuid="50b4d561-9541-4591-8a8d-6a435f2a3b11"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ODesferico}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="43" y="78" width="16" height="13" uuid="094b1bb9-4e3c-4fc6-bacf-74390bf024d9"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SnlOEesferico}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="54" y="78" width="26" height="13" uuid="25fff37e-7808-427d-8f45-61f88ed95c71"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OEesferico}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="99" y="63" width="13" height="13" uuid="9ee96544-96ce-434e-a003-6c706178a52d"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SnlODcilindro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="110" y="63" width="26" height="13" uuid="3a1ad1c8-0330-48ae-8b64-4faf3ca5c455"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ODcilindro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="99" y="78" width="13" height="13" uuid="8ae66c3c-6b23-4c8c-808c-b5f7c929bb4b"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SnlOEcilindro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="110" y="78" width="26" height="13" uuid="edd28461-8941-46fc-87af-d525deb4f72e"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OEcilindro}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="166" y="63" width="26" height="13" uuid="12268b5f-db5f-46e3-aa50-ebd6bc6ba980"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ODeixo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="166" y="78" width="26" height="13" uuid="c26daa7f-973e-4c1e-8cef-f21bb7063827"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OEeixo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="219" y="63" width="38" height="13" uuid="e8e17b58-7127-4d70-8ccc-588dd31d8b13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ODav}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="219" y="78" width="38" height="13" uuid="61d9a410-aacd-41a8-b09a-08b91c49de63"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OEav}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="352" y="63" width="39" height="13" uuid="b98cd0ae-4fc3-41cb-873d-ee1ffec8a0a3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{AO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="281" y="63" width="26" height="13" uuid="6b9b6164-0585-4787-87d1-3ed317787db6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Adcao}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="22" y="60" width="382" height="1" uuid="233f0580-5c76-41b3-b9c4-bb8c77763f74"/>
+				<graphicElement>
+					<pen lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="40" y="50" width="1" height="41" uuid="cd80dfe3-afc9-4662-9458-164de594352a"/>
+				<graphicElement>
+					<pen lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="5" y="5" width="60" height="13" uuid="6f11a92d-5099-400a-bbd4-8cb1eebe77d2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REFRAÇÃO]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

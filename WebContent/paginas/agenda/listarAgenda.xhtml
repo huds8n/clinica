@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/facelets/template.xhtml">
+	<ui:define name="title">
+		<title>SisOtica</title>
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view contentType="text/html; charset=ISO-8859-1">
+			<h:form>
+				<f:metadata>
+					<f:event type="preRenderView" listener="#{agendaBean.listarHoje}" />
+				</f:metadata>
+				<p:panel id="panel"
+					header="Listagem dos Agendamentos Ativos de Hoje"
+					style="margin-bottom:10px;">
+					<p:growl id="growl" showDetail="true" />
+					<t:saveState value="#{agendaBean.listagem}" />
+					<t:saveState value="#{agendaBean.agendaSelecionada}" />
+
+					<p:dataTable var="agenda" value="#{agendaBean.listagem}" border="1"
+						rowKey="#{agenda.idagenda}"
+						selection="#{agendaBean.agendaSelecionada}" selectionMode="single"
+						width="100%" paginator="true"
+						paginatorPosition="bottom" rows="10"
+						emptyMessage="Sem Registros Para Exibição!!!">
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Cliente" />
+							</f:facet>
+							<h:outputText value="#{agenda.cliente.nome}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Data Cadastro" />
+							</f:facet>
+							<h:outputText value="#{agenda.dataLancamento}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Data:" />
+							</f:facet>
+							<h:outputText value="#{agenda.dataAgenda}" />
+						</p:column>
+
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Hora" />
+							</f:facet>
+							<h:outputText value="#{agenda.horaAgenda} " />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Status" />
+							</f:facet>
+							<h:outputText value="#{agenda.status} " />
+						</p:column>
+
+						<p:column style="width: 120px;">
+							<f:facet name="header">
+								<h:outputText value="Opções" />
+							</f:facet>
+							<p:commandLink id="editar" value="Alterar"
+								onclick="dlgEdit.show()" image="ui-icon ui-icon-close">
+							</p:commandLink>
+							<p:dialog header="Atenção!" widgetVar="dlgEdit" resizable="false"
+								modal="true">
+			    Confirma a Alteração deste registro?
+				<h:panelGrid columns="2" style="margin-bottom:10px">
+									<p:commandButton value="Sim" ajax="false" type="submit"
+										oncomplete="dlgEdit.hide();" action="#{agendaBean.editar}">
+										<f:setPropertyActionListener value="#{agenda}"
+											target="#{agendaBean.registro}" />
+
+									</p:commandButton>
+									<p:commandButton value="Não" oncomplete="dlgEdit.hide();" />
+								</h:panelGrid>
+							</p:dialog>
+
+						</p:column>
+					</p:dataTable>
+
+
+
+				</p:panel>
+
+				<h:outputLink value="#{facesContext.externalContext.request.contextPath}/paginas/index.xhtml">
+					<img
+						src="#{facesContext.externalContext.request.contextPath}/resources/voltar.png"
+						width="45px" />
+				</h:outputLink>
+			</h:form>
+			<h:messages layout="table" errorStyle="color: red"
+				infoStyle="color: green" warnStyle="color: orange"
+				fatalStyle="color: gray" showDetail="false" />
+		</f:view>
+	</ui:define>
+</ui:composition>
+
+</html>
